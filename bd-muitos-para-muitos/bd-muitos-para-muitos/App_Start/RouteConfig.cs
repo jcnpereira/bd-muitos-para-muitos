@@ -16,7 +16,7 @@ namespace bd_muitos_para_muitos
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "A", action = "Index", id = UrlParameter.Optional }
             );
         }
     }
