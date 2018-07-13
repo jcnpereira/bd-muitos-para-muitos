@@ -26,11 +26,19 @@ namespace bd_muitos_para_muitos.Controllers {
          if(a == null) {
             return HttpNotFound();
          }
+
+         // gerar a lista de objetos de B que podem ser associados a A
+         ViewBag.ListaObjetosDeB = db.B.OrderBy(b => b.NomeB).ToList();
+
          return View(a);
       }
 
       // GET: A/Create
       public ActionResult Create() {
+
+         // gerar a lista de objetos de B que podem ser associados a A
+         ViewBag.ListaObjetosDeB = db.B.OrderBy(b => b.NomeB).ToList();
+
          return View();
       }
 
@@ -39,7 +47,32 @@ namespace bd_muitos_para_muitos.Controllers {
       // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public ActionResult Create([Bind(Include = "ID,NomeA1,NomeA2")] A a) {
+      public ActionResult Create([Bind(Include = "ID,NomeA1,NomeA2")] A a, string[] opcoesEscolhidasDeB) {
+
+         /// avalia se o array com a lista das escolhas de objetos de B associados ao objeto do tipo A 
+         /// é nula, ou não.
+         /// Só poderá avanção se NÃO for nula
+         if(opcoesEscolhidasDeB==null) {
+            ModelState.AddModelError("", "Necessita escolher pelo menos um valor de B para associar ao seu objeto de A.");
+            // gerar a lista de objetos de B que podem ser associados a A
+            ViewBag.ListaObjetosDeB = db.B.OrderBy(b => b.NomeB).ToList();
+            // devolver controlo à View
+            return View(a);
+         }
+
+         // criar uma lista com os objetos escolhidos de B
+         List<B> listaDeObjetosDeBEscolhidos = new List<B>();
+         foreach(string item in opcoesEscolhidasDeB) {
+            //procurar o objeto de B
+            B b = db.B.Find(Convert.ToInt32(item));
+            // adicioná-lo à lista
+            listaDeObjetosDeBEscolhidos.Add(b);
+         }
+
+         // adicionar a lista ao objeto de A
+         a.ListaDeObjetosDeB = listaDeObjetosDeBEscolhidos;
+
+
          if(ModelState.IsValid) {
             db.A.Add(a);
             db.SaveChanges();

@@ -7,26 +7,38 @@
 <h2>Details</h2>
 
 <div>
-    <h4>A</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.NomeA1)
-        </dt>
+   <h4>A</h4>
+   <hr />
+   <dl class="dl-horizontal">
+      <dt>
+         @Html.DisplayNameFor(model => model.NomeA1)
+      </dt>
+      <dd>
+         @Html.DisplayFor(model => model.NomeA1)
+      </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.NomeA1)
-        </dd>
+      <dt>
+         @Html.DisplayNameFor(model => model.NomeA2)
+      </dt>
+      <dd>
+         @Html.DisplayFor(model => model.NomeA2)
+      </dd>
+   </dl>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NomeA2)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.NomeA2)
-        </dd>
-
-    </dl>
+   <div class="form-group">
+      <span class="control-label col-md-2">Elementos de B associados a A</span>
+      <div class="col-md-10">
+         @{ string selected = "";}
+         @foreach(var item in ViewBag.ListaObjetosDeB) {
+            selected = "";
+            foreach(int opcaoID in Model.ListaDeObjetosDeB.Select(b => b.ID)) {
+               if(item.ID == opcaoID) { selected = "checked"; }
+            }
+            <input type="checkbox" name="opcoesEscolhidasDeB" value="@item.ID" @selected disabled/> @item.NomeB
+            <br />
+         }
+      </div>
+   </div>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
